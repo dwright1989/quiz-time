@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startGame() {
     const code = generateGameCode();
-    const url = window.location.origin + window.location.pathname + "?join=" + code;
+    const url = "https://dwright1989.github.io/quiz-time/index.html?join=" + code;
 
     gameCodeDiv.innerHTML = `<h2>Game Code: ${code}</h2><p>Scan this QR code to join:</p>`;
 
