@@ -1,12 +1,14 @@
 const firebaseConfig = {
   apiKey: "AIzaSyBIx9m2RspAUHiMtINd96VQdWaprH-8m24",
   authDomain: "quizapp-765f0.firebaseapp.com",
+  databaseURL: "https://quizapp-765f0-default-rtdb.firebaseio.com",
   projectId: "quizapp-765f0",
-  storageBucket: "quizapp-765f0.firebasestorage.app",
+  storageBucket: "quizapp-765f0.appspot.com",
   messagingSenderId: "454149464659",
   appId: "1:454149464659:web:3e776c432ac2b4cb615ca6",
   measurementId: "G-4MKJ7T5YTQ"
 };
+
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
