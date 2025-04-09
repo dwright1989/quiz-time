@@ -81,7 +81,7 @@ window.addEventListener("load", () => {
   const params = new URLSearchParams(window.location.search);
   const code = params.get("join");
 
-  if (code) {
+  if (code && codeInput) {
     hostScreen.classList.remove("active");
     playerScreen.classList.add("active");
     codeInput.value = code;
