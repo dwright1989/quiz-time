@@ -64,7 +64,7 @@
 
     function startGame() {
       gameCode = generateGameCode();
-      const joinUrl = `${window.location.origin}${window.location.pathname}?join=${gameCode}`;
+      const joinUrl = `${window.location.origin}${window.location.pathname}?join=${gameCode}&name=`;
       document.getElementById("game-code").innerHTML = `<h2>Game Code: ${gameCode}</h2><p>Or scan the QR to join!</p>`;
 
       new QRious({
@@ -109,13 +109,20 @@
     }
 
     // Auto-join from QR URL
-    window.addEventListener("load", () => {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get("join");
-      if (code) {
-        codeInput.value = code;
-      }
-    });
+ window.addEventListener("load", () => {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("join");
+  const name = params.get("name");
+
+  if (code) {
+    codeInput.value = code;
+  }
+  if (name) {
+    playerNameInput.value = name;
+    joinGame();
+  }
+});
+
   </script>
 </body>
 </html>
