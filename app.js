@@ -1,7 +1,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyBIx9m2RspAUHiMtINd96VQdWaprH-8m24",
   authDomain: "quizapp-765f0.firebaseapp.com",
-  databaseURL: "https://quizapp-765f0-default-rtdb.firebaseio.com",
+  databaseURL: "https://quizapp-765f0-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "quizapp-765f0",
   storageBucket: "quizapp-765f0.appspot.com",
   messagingSenderId: "454149464659",
