@@ -1,25 +1,36 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QR Test Quiz</title>
+  <title>Quiz Game</title>
   <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    button { padding: 1rem 2rem; font-size: 1.2rem; }
+    body { font-family: sans-serif; text-align: center; background: #fdf6e3; }
+    .screen { display: none; padding: 2rem; }
+    .active { display: block; }
+    button { padding: 1rem 2rem; font-size: 1.2rem; margin: 1rem; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 </head>
 <body>
-  <h1>QR Code Test</h1>
-  <button id="start-btn">Start Game</button>
-  <div id="game-code"></div>
-  <canvas id="qr-code"></canvas>
-  <div id="log"></div>
+  <div id="host-screen" class="screen active">
+    <h1>Host Quiz Game</h1>
+    <button onclick="startGame()">Start Game</button>
+    <div id="game-code"></div>
+    <canvas id="qr-code"></canvas>
+    <div id="player-list"></div>
+  </div>
 
-  <script src="app.js" defer></script>
+  <div id="player-screen" class="screen">
+    <h1>Join Quiz</h1>
+    <input type="text" id="code-input" placeholder="Enter game code" />
+    <input type="text" id="player-name" placeholder="Your name" />
+    <button onclick="joinGame()">Join</button>
+    <div id="question-area"></div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
