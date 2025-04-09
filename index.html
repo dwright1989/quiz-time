@@ -21,6 +21,12 @@
     <div id="game-code"></div>
     <canvas id="qr-code"></canvas>
     <div id="player-list"></div>
+    <div style="margin-top:2rem;">
+      <h3>Generate Player QR Code</h3>
+      <input type="text" id="qr-player-name" placeholder="Player name" />
+      <button onclick="generatePlayerQR()">Generate QR</button>
+      <canvas id="player-qr-code"></canvas>
+    </div>
   </div>
 
   <div id="player-screen" class="screen">
@@ -72,6 +78,23 @@
         value: joinUrl,
         size: 200
       });
+
+      function generatePlayerQR() {
+        const name = document.getElementById("qr-player-name").value.trim();
+        if (!name || !gameCode) {
+          alert("Enter a name and start a game first!");
+          return;
+        }
+      
+        const joinUrl = `${window.location.origin}${window.location.pathname}?join=${gameCode}&name=${encodeURIComponent(name)}`;
+      
+        new QRious({
+          element: document.getElementById("player-qr-code"),
+          value: joinUrl,
+          size: 200
+        });
+      }
+
 
       db.ref(`games/${gameCode}/players`).on('value', snapshot => {
         const players = snapshot.val() || {};
