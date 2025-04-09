@@ -1,3 +1,9 @@
+const hostScreen = document.getElementById("host-screen");
+const playerScreen = document.getElementById("player-screen");
+const codeInput = document.getElementById("code-input");
+const playerNameInput = document.getElementById("player-name");
+const questionArea = document.getElementById("question-area");
+const playerList = document.getElementById("player-list");
 
 document.addEventListener("DOMContentLoaded", () => {
   const firebaseConfig = {
