@@ -37,4 +37,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   btn.addEventListener("click", startGame);
+
+  window.addEventListener("load", () => {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("join");
+
+  if (code) {
+    // Auto-switch to player screen
+    hostScreen.classList.remove("active");
+    playerScreen.classList.add("active");
+
+    // Autofill the code input
+    codeInput.value = code;
+  }
+});
+
 });
