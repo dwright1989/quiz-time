@@ -43,13 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const code = params.get("join");
 
   if (code) {
-    // Auto-switch to player screen
-    hostScreen.classList.remove("active");
-    playerScreen.classList.add("active");
+    // Hide host screen, show player screen
+    document.getElementById("host-screen").classList.remove("active");
+    document.getElementById("player-screen").classList.add("active");
 
-    // Autofill the code input
-    codeInput.value = code;
+    // Autofill the game code
+    document.getElementById("code-input").value = code;
   }
 });
+
 
 });
