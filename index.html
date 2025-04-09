@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Party Quiz Game</title>
   <style>
     body { font-family: sans-serif; text-align: center; background: #fdf6e3; }
@@ -21,12 +22,6 @@
     <div id="game-code"></div>
     <canvas id="qr-code"></canvas>
     <div id="player-list"></div>
-    <div style="margin-top:2rem;">
-      <h3>Generate Player QR Code</h3>
-      <input type="text" id="qr-player-name" placeholder="Player name" />
-      <button onclick="generatePlayerQR()">Generate QR</button>
-      <canvas id="player-qr-code"></canvas>
-    </div>
   </div>
 
   <div id="player-screen" class="screen">
@@ -37,6 +32,6 @@
     <div id="question-area"></div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 
-window.addEventListener("load", () => {
+document.addEventListener("DOMContentLoaded", () => {
   const firebaseConfig = {
     apiKey: "AIzaSyBIx9m2RspAUHiMtINd96VQdWaprH-8m24",
     authDomain: "quizapp-765f0.firebaseapp.com",
@@ -30,53 +30,45 @@ window.addEventListener("load", () => {
     return Math.random().toString(36).substr(2, 4).toUpperCase();
   }
 
-  function startGame() {
+  window.startGame = function () {
     gameCode = generateGameCode();
-    const joinUrl = `${window.location.origin}${window.location.pathname}?join=${gameCode}`;
-    document.getElementById("game-code").innerHTML = `<h2>Game Code: ${gameCode}</h2><p>Or scan the QR to join!</p>`;
+    const joinUrl = \`\${window.location.origin}\${window.location.pathname}?join=\${gameCode}\`;
+    document.getElementById("game-code").innerHTML = \`<h2>Game Code: \${gameCode}</h2><p>Or scan the QR to join!</p>\`;
 
-    new QRious({
-      element: document.getElementById("qr-code"),
-      value: joinUrl,
-      size: 200
-    });
-
-    db.ref(`games/${gameCode}/players`).on('value', snapshot => {
-      const players = snapshot.val() || {};
-      playerList.innerHTML = "<h3>Players Joined:</h3>" +
-        Object.values(players).map(name => `<p>${name}</p>`).join('');
-    });
-  }
-
-  function generatePlayerQR() {
-    const name = document.getElementById("qr-player-name").value.trim();
-    if (!name || !gameCode) {
-      alert("Enter a name and start a game first!");
+    const qrCanvas = document.getElementById("qr-code");
+    if (!qrCanvas) {
+      console.error("QR canvas not found.");
       return;
     }
 
-    const joinUrl = `${window.location.origin}${window.location.pathname}?join=${gameCode}&name=${encodeURIComponent(name)}`;
-
+    // Log and generate QR code
+    console.log("Generating QR for:", joinUrl);
     new QRious({
-      element: document.getElementById("player-qr-code"),
+      element: qrCanvas,
       value: joinUrl,
       size: 200
     });
-  }
 
-  function joinGame() {
+    db.ref(\`games/\${gameCode}/players\`).on("value", snapshot => {
+      const players = snapshot.val() || {};
+      playerList.innerHTML = "<h3>Players Joined:</h3>" +
+        Object.values(players).map(name => \`<p>\${name}</p>\`).join('');
+    });
+  };
+
+  window.joinGame = function () {
     const code = codeInput.value.trim().toUpperCase();
     const name = playerNameInput.value.trim();
 
     if (!name) return alert("Please enter your name");
 
-    db.ref(`games/${code}/players`).push(name);
+    db.ref(\`games/\${code}/players\`).push(name);
 
     gameCode = code;
     hostScreen.classList.remove("active");
     playerScreen.classList.add("active");
     showQuestion(0);
-  }
+  };
 
   function showQuestion(index) {
     const q = questions[index];
@@ -84,23 +76,18 @@ window.addEventListener("load", () => {
       questionArea.innerHTML = "<h2>Game Over!</h2>";
       return;
     }
-    questionArea.innerHTML = `<h2>${q.q}</h2>` +
-      q.a.map(ans => `<button onclick='answerQuestion(${index + 1})'>${ans}</button>`).join("<br>");
+    questionArea.innerHTML = \`<h2>\${q.q}</h2>\` +
+      q.a.map(ans => \`<button onclick='answerQuestion(\${index + 1})'>\${ans}</button>\`).join("<br>");
   }
 
-  function answerQuestion(nextIndex) {
+  window.answerQuestion = function (nextIndex) {
     showQuestion(nextIndex);
-  }
+  };
 
+  // Auto-fill join code if QR is used
   const params = new URLSearchParams(window.location.search);
   const code = params.get("join");
-  const name = params.get("name");
-
   if (code) {
     codeInput.value = code;
-  }
-  if (name) {
-    playerNameInput.value = name;
-    joinGame();
   }
 });
