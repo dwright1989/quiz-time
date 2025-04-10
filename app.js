@@ -51,8 +51,6 @@ window.startGame = function() {
 
   // set currentQuestion to 0 in database
   db.ref(`games/${gameCode}/currentQuestion`).set(0);
-  // Start the quiz
-db.ref(`games/${gameCode}/currentQuestion`).set(0);
 
 // Automatically advance every 10 seconds
 let questionIndex = 0;
