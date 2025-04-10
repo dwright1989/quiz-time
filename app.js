@@ -51,6 +51,34 @@ function startGame() {
 
   // set currentQuestion to 0 in database
   db.ref(`games/${gameCode}/currentQuestion`).set(0);
+  // Start the quiz
+db.ref(`games/${gameCode}/currentQuestion`).set(0);
+
+// Automatically advance every 10 seconds
+let questionIndex = 0;
+const questionInterval = setInterval(() => {
+  questionIndex++;
+  if (questionIndex >= questions.length) {
+    clearInterval(questionInterval);
+    db.ref(`games/${gameCode}/currentQuestion`).set("end");
+  } else {
+    db.ref(`games/${gameCode}/currentQuestion`).set(questionIndex);
+  }
+}, 10000);
+
+  // Host joins the quiz screen and listens for updates
+hostScreen.classList.remove("active");
+playerScreen.classList.add("active");
+
+db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
+  const index = snapshot.val();
+  if (index === "end") {
+    questionArea.innerHTML = "<h2>Game Over!</h2>";
+  } else if (typeof index === "number") {
+    showQuestion(index);
+  }
+});
+
   
 }
 
@@ -68,7 +96,9 @@ function joinGame() {
   // Listen for question updates
   db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
     const index = snapshot.val();
-    if (typeof index === "number") {
+    if (index === "end") {
+      questionArea.innerHTML = "<h2>Game Over!</h2>";
+    } else if (typeof index === "number") {
       showQuestion(index);
     }
   });
