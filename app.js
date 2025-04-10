@@ -1,3 +1,4 @@
+
 const firebaseConfig = {
   apiKey: "AIzaSyBIx9m2RspAUHiMtINd96VQdWaprH-8m24",
   authDomain: "quizapp-765f0.firebaseapp.com",
@@ -32,10 +33,7 @@ function generateGameCode() {
 }
 
 function startGame() {
-  if (!isHost) return;
   db.ref(`games/${gameCode}/currentQuestion`).set(0);
-  hostScreen.classList.remove("active");
-  playerScreen.classList.add("active");
 }
 
 function newGame() {
@@ -55,14 +53,6 @@ function newGame() {
     playerList.innerHTML = `<h3>Players Joined:</h3>` +
       Object.values(players).map(name => `<p>${name}</p>`).join('');
   });
-
-  db.ref(`games/${gameCode}/currentQuestion`).set(0);
-  db.ref(`games/${gameCode}/currentQuestion`).on("value", (snapshot) => {
-    const index = snapshot.val();
-    if (index !== null) {
-      showQuestion(index);
-    }
-  });
 }
 
 function joinGame() {
@@ -72,15 +62,15 @@ function joinGame() {
 
   db.ref(`games/${code}/players`).push(name);
   joinArea.style.display = "none";
+
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
 
-  db.ref(`games/${gameCode}/currentQuestion`).on("value", (snapshot) => {
+  // Only show question when currentQuestion is triggered
+  db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
     const index = snapshot.val();
-    if (index !== null) {
-      showQuestion(index);
-    }
+    if (index !== null) showQuestion(index);
   });
 }
 
@@ -94,12 +84,11 @@ function showQuestion(index) {
     q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
 }
 
-function answerQuestion(currentIndex) {
-  if (isHost) {
-    db.ref(`games/${gameCode}/currentQuestion`).set(currentIndex + 1);
-  }
+function answerQuestion(index) {
+  console.log("Answered question", index);
 }
 
+// Auto-join via ?join=CODE
 window.addEventListener("load", () => {
   const params = new URLSearchParams(window.location.search);
   const code = params.get("join");
