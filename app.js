@@ -32,7 +32,11 @@ function generateGameCode() {
   return Math.random().toString(36).substr(2, 4).toUpperCase();
 }
 
-function startGame() {
+function startGame(){
+  showQuestion(0);
+}
+
+function newGame() {
   isHost = true;
   gameCode = generateGameCode();
   const joinUrl = "https://dwright1989.github.io/quiz-time/index.html?join=" + gameCode;
@@ -68,7 +72,6 @@ function joinGame() {
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
-  showQuestion(0);
 }
 
 function showQuestion(index) {
