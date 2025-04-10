@@ -16,6 +16,7 @@ const db = firebase.database();
 
 const hostScreen = document.getElementById("host-screen");
 const playerScreen = document.getElementById("player-screen");
+const joinArea = document.getElementById("join-container");
 const codeInput = document.getElementById("code-input");
 const playerNameInput = document.getElementById("player-name");
 const questionArea = document.getElementById("question-area");
@@ -59,12 +60,13 @@ function joinGame() {
   const name = playerNameInput.value.trim();
 
   if (!name) return alert("Please enter your name");
-
+  
   db.ref(`games/${code}/players`).push(name);
 
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
+  joinArea.classList.remove("active");
   showQuestion(0);
 }
 
