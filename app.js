@@ -9,7 +9,6 @@ const firebaseConfig = {
   measurementId: "G-4MKJ7T5YTQ"
 };
 
-
 firebase.initializeApp(firebaseConfig);
 let isHost = false;
 const db = firebase.database();
@@ -32,8 +31,11 @@ function generateGameCode() {
   return Math.random().toString(36).substr(2, 4).toUpperCase();
 }
 
-function startGame(){
-  showQuestion(0);
+function startGame() {
+  if (!isHost) return;
+  db.ref(`games/${gameCode}/currentQuestion`).set(0);
+  hostScreen.classList.remove("active");
+  playerScreen.classList.add("active");
 }
 
 function newGame() {
@@ -54,24 +56,32 @@ function newGame() {
       Object.values(players).map(name => `<p>${name}</p>`).join('');
   });
 
-  // set currentQuestion to 0 in database
   db.ref(`games/${gameCode}/currentQuestion`).set(0);
-  
+  db.ref(`games/${gameCode}/currentQuestion`).on("value", (snapshot) => {
+    const index = snapshot.val();
+    if (index !== null) {
+      showQuestion(index);
+    }
+  });
 }
 
 function joinGame() {
   const code = codeInput.value.trim().toUpperCase();
   const name = playerNameInput.value.trim();
-
   if (!name) return alert("Please enter your name");
-  
+
   db.ref(`games/${code}/players`).push(name);
-
   joinArea.style.display = "none";
-
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
+
+  db.ref(`games/${gameCode}/currentQuestion`).on("value", (snapshot) => {
+    const index = snapshot.val();
+    if (index !== null) {
+      showQuestion(index);
+    }
+  });
 }
 
 function showQuestion(index) {
@@ -84,18 +94,15 @@ function showQuestion(index) {
     q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
 }
 
-function answerQuestion(nextIndex) {
-  // Just a placeholder — you can expand to check answers
+function answerQuestion(currentIndex) {
   if (isHost) {
     db.ref(`games/${gameCode}/currentQuestion`).set(currentIndex + 1);
   }
 }
 
-// Auto-join via ?join=CODE
 window.addEventListener("load", () => {
   const params = new URLSearchParams(window.location.search);
   const code = params.get("join");
-
   if (code && codeInput) {
     hostScreen.classList.remove("active");
     joinArea.classList.add("active");
