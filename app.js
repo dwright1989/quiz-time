@@ -21,20 +21,10 @@ const playerNameInput = document.getElementById("player-name");
 const questionArea = document.getElementById("question-area");
 const playerList = document.getElementById("player-list");
 
-let gameCode = "";
-const questions = [
-  { q: "What color is the sky?", a: ["Blue", "Green", "Red"] },
-  { q: "What is 2+2?", a: ["3", "4", "5"] },
-];
+let gameCode = generateGameCode();
+const joinUrl = `${window.location.origin}${window.location.pathname}?join=${gameCode}`;
 
-function generateGameCode() {
-  return Math.random().toString(36).substr(2, 4).toUpperCase();
-}
-
-window.startGame = function() {
-  isHost = true;
-  gameCode = generateGameCode();
-  const joinUrl = "https://dwright1989.github.io/quiz-time/index.html?join=" + gameCode;
+document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("game-code").innerHTML = `<h2>Game Code: ${gameCode}</h2><p>Or scan the QR to join!</p>`;
 
   new QRious({
@@ -48,37 +38,24 @@ window.startGame = function() {
     playerList.innerHTML = `<h3>Players Joined:</h3>` +
       Object.values(players).map(name => `<p>${name}</p>`).join('');
   });
-
-  // set currentQuestion to 0 in database
-  db.ref(`games/${gameCode}/currentQuestion`).set(0);
-
-// Automatically advance every 10 seconds
-let questionIndex = 0;
-const questionInterval = setInterval(() => {
-  questionIndex++;
-  if (questionIndex >= questions.length) {
-    clearInterval(questionInterval);
-    db.ref(`games/${gameCode}/currentQuestion`).set("end");
-  } else {
-    db.ref(`games/${gameCode}/currentQuestion`).set(questionIndex);
-  }
-}, 10000);
-
-  // Host joins the quiz screen and listens for updates
-hostScreen.classList.remove("active");
-playerScreen.classList.add("active");
-
-db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
-  const index = snapshot.val();
-  if (index === "end") {
-    questionArea.innerHTML = "<h2>Game Over!</h2>";
-  } else if (typeof index === "number") {
-    showQuestion(index);
-  }
 });
 
-  
+// Start questions only when the host clicks start
+window.startGame = function () {
+  showQuestion(0);
+};
+
+
+let gameCode = "";
+const questions = [
+  { q: "What color is the sky?", a: ["Blue", "Green", "Red"] },
+  { q: "What is 2+2?", a: ["3", "4", "5"] },
+];
+
+function generateGameCode() {
+  return Math.random().toString(36).substr(2, 4).toUpperCase();
 }
+
 
 function joinGame() {
   const code = codeInput.value.trim().toUpperCase();
