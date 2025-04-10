@@ -41,12 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Start questions only when the host clicks start
-window.startGame = function () {
+function startGame() {
   showQuestion(0);
 };
 
-
-let gameCode = "";
 const questions = [
   { q: "What color is the sky?", a: ["Blue", "Green", "Red"] },
   { q: "What is 2+2?", a: ["3", "4", "5"] },
