@@ -66,7 +66,7 @@ function joinGame() {
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
-  joinArea.classList.add("active");
+  joinArea.classList.remove("active");
   showQuestion(0);
 }
 
@@ -94,7 +94,7 @@ window.addEventListener("load", () => {
 
   if (code && codeInput) {
     hostScreen.classList.remove("active");
-    joinArea.classList.remove("active");
+    joinArea.classList.add("active");
     playerScreen.classList.add("active");
     codeInput.value = code;
   }
