@@ -63,10 +63,11 @@ function joinGame() {
   
   db.ref(`games/${code}/players`).push(name);
 
+  document.getElementById("join-area").style.display = "none";
+
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
-  joinArea.classList.remove("active");
   showQuestion(0);
 }
 
