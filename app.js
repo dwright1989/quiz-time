@@ -11,6 +11,7 @@ const firebaseConfig = {
 
 
 firebase.initializeApp(firebaseConfig);
+let isHost = false;
 const db = firebase.database();
 
 const hostScreen = document.getElementById("host-screen");
@@ -31,6 +32,7 @@ function generateGameCode() {
 }
 
 function startGame() {
+  isHost = true;
   gameCode = generateGameCode();
   const joinUrl = "https://dwright1989.github.io/quiz-time/index.html?join=" + gameCode;
   document.getElementById("game-code").innerHTML = `<h2>Game Code: ${gameCode}</h2><p>Or scan the QR to join!</p>`;
@@ -46,6 +48,10 @@ function startGame() {
     playerList.innerHTML = `<h3>Players Joined:</h3>` +
       Object.values(players).map(name => `<p>${name}</p>`).join('');
   });
+
+  // set currentQuestion to 0 in database
+  db.ref(`games/${gameCode}/currentQuestion`).set(0);
+  
 }
 
 function joinGame() {
@@ -59,7 +65,13 @@ function joinGame() {
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
-  showQuestion(0);
+  // Listen for question updates
+  db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
+    const index = snapshot.val();
+    if (typeof index === "number") {
+      showQuestion(index);
+    }
+  });
 }
 
 function showQuestion(index) {
@@ -69,11 +81,14 @@ function showQuestion(index) {
     return;
   }
   questionArea.innerHTML = `<h2>${q.q}</h2>` +
-    q.a.map(ans => `<button onclick='answerQuestion(${index + 1})'>${ans}</button>`).join("<br>");
+    q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
 }
 
 function answerQuestion(nextIndex) {
-  showQuestion(nextIndex);
+  // Just a placeholder — you can expand to check answers
+  if (isHost) {
+    db.ref(`games/${gameCode}/currentQuestion`).set(currentIndex + 1);
+  }
 }
 
 // Auto-join via ?join=CODE
