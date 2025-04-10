@@ -21,10 +21,20 @@ const playerNameInput = document.getElementById("player-name");
 const questionArea = document.getElementById("question-area");
 const playerList = document.getElementById("player-list");
 
-let gameCode = generateGameCode();
-const joinUrl = `${window.location.origin}${window.location.pathname}?join=${gameCode}`;
+let gameCode = "";
+const questions = [
+  { q: "What color is the sky?", a: ["Blue", "Green", "Red"] },
+  { q: "What is 2+2?", a: ["3", "4", "5"] },
+];
 
-document.addEventListener("DOMContentLoaded", () => {
+function generateGameCode() {
+  return Math.random().toString(36).substr(2, 4).toUpperCase();
+}
+
+function startGame() {
+  isHost = true;
+  gameCode = generateGameCode();
+  const joinUrl = "https://dwright1989.github.io/quiz-time/index.html?join=" + gameCode;
   document.getElementById("game-code").innerHTML = `<h2>Game Code: ${gameCode}</h2><p>Or scan the QR to join!</p>`;
 
   new QRious({
@@ -38,22 +48,11 @@ document.addEventListener("DOMContentLoaded", () => {
     playerList.innerHTML = `<h3>Players Joined:</h3>` +
       Object.values(players).map(name => `<p>${name}</p>`).join('');
   });
-});
 
-// Start questions only when the host clicks start
-function startGame() {
-  showQuestion(0);
-};
-
-const questions = [
-  { q: "What color is the sky?", a: ["Blue", "Green", "Red"] },
-  { q: "What is 2+2?", a: ["3", "4", "5"] },
-];
-
-function generateGameCode() {
-  return Math.random().toString(36).substr(2, 4).toUpperCase();
+  // set currentQuestion to 0 in database
+  db.ref(`games/${gameCode}/currentQuestion`).set(0);
+  
 }
-
 
 function joinGame() {
   const code = codeInput.value.trim().toUpperCase();
@@ -69,9 +68,7 @@ function joinGame() {
   // Listen for question updates
   db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
     const index = snapshot.val();
-    if (index === "end") {
-      questionArea.innerHTML = "<h2>Game Over!</h2>";
-    } else if (typeof index === "number") {
+    if (typeof index === "number") {
       showQuestion(index);
     }
   });
