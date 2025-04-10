@@ -65,13 +65,7 @@ function joinGame() {
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
-  // Listen for question updates
-  db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
-    const index = snapshot.val();
-    if (typeof index === "number") {
-      showQuestion(index);
-    }
-  });
+  showQuestion(0);
 }
 
 function showQuestion(index) {
