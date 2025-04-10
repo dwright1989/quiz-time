@@ -31,7 +31,7 @@ function generateGameCode() {
   return Math.random().toString(36).substr(2, 4).toUpperCase();
 }
 
-function startGame() {
+window.startGame = function() {
   isHost = true;
   gameCode = generateGameCode();
   const joinUrl = "https://dwright1989.github.io/quiz-time/index.html?join=" + gameCode;
