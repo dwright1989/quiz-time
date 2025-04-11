@@ -82,23 +82,27 @@
     <div id="host-live-scores" style="margin-top: 20px;"></div
   </div>
 
-  <div id="player-screen" class="screen">
-    <div id="timer-container" style="display:none;">
-      <div id="timer-text">Time left: <span id="time-left">10</span> seconds</div>
-      <div id="player-progress-bar" class="progress-bar">
-        <div id="player-progress-fill" class="progress-fill"></div>
-      </div>
-    </div>
+  <!-- This is the join screen -->
+<div id="join-container" class="screen active">
+  <h1>Join Quiz</h1>
+  <input type="text" id="code-input" placeholder="Enter game code" />
+  <input type="text" id="player-name" placeholder="Your name" />
+  <button onclick="joinGame()">Join</button>
+</div>
 
-    <div id="join-container" class="screen">
-      <h1>Join Quiz</h1>
-      <input type="text" id="code-input" placeholder="Enter game code" />
-      <input type="text" id="player-name" placeholder="Your name" />
-      <button onclick="joinGame()">Join</button>
-    </div>  
-     <div id="player-question-area"></div>
-    <div id="waiting-for-host" style="display: none;"><h3>Waiting for host to start the game</h3></div>
+<!-- This is the player screen (after joining) -->
+<div id="player-screen" class="screen">
+  <div id="timer-container" style="display:none;">
+    <div id="timer-text">Time left: <span id="time-left">10</span> seconds</div>
+    <div id="player-progress-bar" class="progress-bar">
+      <div id="player-progress-fill" class="progress-fill"></div>
+    </div>
   </div>
+
+  <div id="player-question-area"></div>
+  <div id="waiting-for-host" style="display: none;"><h3>Waiting for host to start the game</h3></div>
+</div>
+
 
   <script src="app.js"></script>
 </body>
