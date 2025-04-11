@@ -144,7 +144,17 @@ function showQuestion(index) {
 
   // Player: show question + answer buttons
   let html = `<h2>${q.q}</h2>`;
-  html += q.a.map(ans => `<button onclick='answerQuestion(${index}, "${ans}")'>${ans}</button>`).join("<br>");
+  html += q.a.map(ans => 
+    `<button onclick='answerQuestion(${index}, "${ans}")' class='answer-btn'>${ans}</button>`
+  ).join("<br>");
+  
+  document.getElementById("player-question-area").innerHTML = html;
+  
+  // ✅ Re-enable buttons (in case they were disabled from a previous question)
+  const buttons = document.querySelectorAll("#player-question-area button");
+  buttons.forEach(btn => btn.disabled = false);
+
+
   document.getElementById("player-question-area").innerHTML = html;
 
   // Show timer UI for host and player
@@ -176,22 +186,36 @@ function showQuestion(index) {
 
 
 function answerQuestion(index, selectedAnswer) {
-  const correctAnswer = questions[index].a[1]; // assuming index 1 is always the correct answer
+  // Disable all buttons after answering
+  const buttons = document.querySelectorAll("#player-question-area button");
+  buttons.forEach(btn => btn.disabled = true);
 
-  if (selectedAnswer === correctAnswer) {
-    const playersRef = db.ref(`games/${gameCode}/players`);
-    playersRef.once('value', snapshot => {
-      const players = snapshot.val();
-      const playerKey = Object.keys(players).find(key => players[key].name === playerNameInput.value);
+  const correctAnswer = questions[index].a[1];
+  const playersRef = db.ref(`games/${gameCode}/players`);
 
-      if (playerKey) {
-        const currentScore = players[playerKey].score || 0;
-        playersRef.child(playerKey).update({ score: currentScore + 1 });
+  playersRef.once('value', snapshot => {
+    const players = snapshot.val();
+    const playerKey = Object.keys(players).find(key => players[key].name === playerNameInput.value);
+
+    if (playerKey) {
+      const player = players[playerKey];
+
+      // Check if already answered this question
+      if (player.answered && player.answered.includes(index)) return;
+
+      // Update answered questions
+      const updatedAnswered = player.answered || [];
+      updatedAnswered.push(index);
+
+      const updates = { answered: updatedAnswered };
+
+      if (selectedAnswer === correctAnswer) {
+        updates.score = (player.score || 0) + 1;
       }
-    });
-  }
 
-  console.log("Answered question", index);
+      playersRef.child(playerKey).update(updates);
+    }
+  });
 }
 
 function showScores() {
