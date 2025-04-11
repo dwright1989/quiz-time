@@ -104,16 +104,18 @@ function showQuestion(index) {
     questionArea.innerHTML = "<h2>Game Over!</h2>";
     return;
   }
-  questionArea.innerHTML = `<h2>${q.q}</h2>` +
-    q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
 
   // Show timer UI
   document.getElementById("timer-container").style.display = "block";
+
+  let html = `<h2>${q.q}</h2>`;
 
   // Only show answer buttons if NOT host
   if (!isHost) {
     html += q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
   }
+
+  questionArea.innerHTML = html;
 
   let timeLeft = 10;
   const timeDisplay = document.getElementById("time-left");
