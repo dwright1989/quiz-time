@@ -74,7 +74,12 @@ function newGame() {
   // Listen for question updates on the host screen too
   db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
     const index = snapshot.val();
-    if (index !== null) showQuestion(index);
+    if (index !== null) {
+      showQuestion(index);
+    } else {
+      // Game is over, show final scores on host
+      showScores();
+    }
   });
 }
 
