@@ -69,7 +69,7 @@ function newGame() {
   db.ref(`games/${gameCode}/players`).on('value', snapshot => {
     const players = snapshot.val() || {};
     playerList.innerHTML = `<h3>Players Joined:</h3>` +
-      Object.values(players).map(name => `<p>$player.{name}</p>`).join('');
+      Object.values(players).map(name => `<p>${player.name}</p>`).join('');
     // Show Start Game button only if at least one player is present
     if (Object.keys(players).length > 0) {
       document.getElementById("start-game-container").style.display = "block";
