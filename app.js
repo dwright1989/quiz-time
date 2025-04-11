@@ -35,6 +35,7 @@ function generateGameCode() {
 }
 
 function startGame() {
+  document.getElementById("scoreboard").style.display = "none";
   let index = 0;
   db.ref(`games/${gameCode}/currentQuestion`).set(index);
 
