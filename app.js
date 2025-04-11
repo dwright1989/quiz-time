@@ -120,7 +120,7 @@ function showQuestion(index) {
 
   // Player: show question + answer buttons
   let html = `<h2>${q.q}</h2>`;
-  html += q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
+  html += q.a.map(ans => `<button onclick='answerQuestion(${index}, "${ans}")'>${ans}</button>`).join("<br>");
   document.getElementById("player-question-area").innerHTML = html;
 
   // Show timer UI for host and player
