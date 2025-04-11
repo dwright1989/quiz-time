@@ -15,6 +15,7 @@ let isHost = false;
 const db = firebase.database();
 
 const hostScreen = document.getElementById("host-screen");
+const hostStartScreen = document.getElementById("host-start-screen");
 const playerScreen = document.getElementById("player-screen");
 const joinArea = document.getElementById("join-container");
 const codeInput = document.getElementById("code-input");
@@ -108,6 +109,7 @@ function showQuestion(index) {
 
   // Host: just show the question
   document.getElementById("host-question-area").innerHTML = `<h2>${q.q}</h2>`;
+  hostStartScreen.style.display = "none";
 
   // Player: show question + answer buttons
   let html = `<h2>${q.q}</h2>`;
