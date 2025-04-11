@@ -36,18 +36,23 @@ function generateGameCode() {
 
 function startGame() {
   let index = 0;
-    db.ref(`games/${gameCode}/currentQuestion`).set(index);
-    timer = setInterval(() => {
-      index++;
-      if (index < questions.length) {
-        db.ref(`games/${gameCode}/currentQuestion`).set(index);
-      } else {
-        db.ref(`games/${gameCode}/currentQuestion`).set(null); // stop further question rendering
-        clearInterval(timer);
-      }
-    }, 10000);
+  db.ref(`games/${gameCode}/currentQuestion`).set(index);
 
+  timer = setInterval(() => {
+    index++;
+    if (index < questions.length) {
+      db.ref(`games/${gameCode}/currentQuestion`).set(index);
+    } else {
+      clearInterval(timer);
+
+      // Delay ending the game by 10 seconds to match the last question's timer
+      setTimeout(() => {
+        db.ref(`games/${gameCode}/currentQuestion`).set(null); // Trigger end of game
+      }, 10000);
+    }
+  }, 10000);
 }
+
 
 function newGame() {
   isHost = true;
@@ -186,21 +191,22 @@ function answerQuestion(index, selectedAnswer) {
 }
 
 function showScores() {
-  db.ref(`games/${gameCode}/players`).once('value', snapshot => {
-    const players = snapshot.val() || {};
+  setTimeout(() => {
+    db.ref(`games/${gameCode}/players`).once('value', snapshot => {
+      const players = snapshot.val() || {};
 
-    // Sort players by score
-    const sortedPlayers = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
+      const sortedPlayers = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
 
-    // Build HTML
-    const html = sortedPlayers.map((p, i) => 
-      `<p><strong>#${i + 1} ${p.name}</strong>: ${p.score || 0} point${p.score === 1 ? '' : 's'}</p>`
-    ).join('');
+      const html = sortedPlayers.map((p, i) => 
+        `<p><strong>#${i + 1} ${p.name}</strong>: ${p.score || 0} point${p.score === 1 ? '' : 's'}</p>`
+      ).join('');
 
-    document.getElementById("score-list").innerHTML = html;
-    document.getElementById("scoreboard").style.display = "block";
-  });
+      document.getElementById("score-list").innerHTML = html;
+      document.getElementById("scoreboard").style.display = "block";
+    });
+  }, 1000); // wait 1s before showing scores
 }
+
 
 
 
