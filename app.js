@@ -36,15 +36,17 @@ function generateGameCode() {
 
 function startGame() {
   let index = 0;
-  db.ref(`games/${gameCode}/currentQuestion`).set(0);
-   timer = setInterval(() => {
-        index++;
-        if (index < questions.length) {
-          db.ref(`games/${gameCode}/currentQuestion`).set(index);
-        } else {
-          clearInterval(timer);
-        }
-      }, 10000); // 10 seconds
+    db.ref(`games/${gameCode}/currentQuestion`).set(index);
+    timer = setInterval(() => {
+      index++;
+      if (index < questions.length) {
+        db.ref(`games/${gameCode}/currentQuestion`).set(index);
+      } else {
+        db.ref(`games/${gameCode}/currentQuestion`).set(null); // stop further question rendering
+        clearInterval(timer);
+      }
+    }, 10000);
+
 }
 
 function newGame() {
@@ -105,13 +107,17 @@ function joinGame() {
 function showQuestion(index) {
   const q = questions[index];
   if (!q) {
-    document.getElementById("host-question-area").innerHTML = "<h2>Game Over!</h2>";
-    document.getElementById("player-question-area").innerHTML = "<h2>Game Over!</h2>";
+    // Hide question UI
+    document.getElementById("host-question-area").style.display = "none";
+    document.getElementById("player-question-area").style.display = "none";
+    document.getElementById("timer-container").style.display = "none";
+    document.getElementById("host-timer-container").style.display = "none";
   
     // Show leaderboard
     showScores();
     return;
   }
+
 
 
   // Host: just show the question
