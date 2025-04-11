@@ -21,6 +21,7 @@ const codeInput = document.getElementById("code-input");
 const playerNameInput = document.getElementById("player-name");
 const questionArea = document.getElementById("question-area");
 const playerList = document.getElementById("player-list");
+const waitingScreen = document.getElementById("waiting-for-host");
 
 let gameCode = "";
 const questions = [
@@ -34,6 +35,7 @@ function generateGameCode() {
 
 function startGame() {
   let index = 0;
+  waitingScreen.style.display = "none";
   db.ref(`games/${gameCode}/currentQuestion`).set(0);
    timer = setInterval(() => {
         index++;
@@ -79,6 +81,7 @@ function joinGame() {
   gameCode = code;
   hostScreen.classList.remove("active");
   playerScreen.classList.add("active");
+  waitingScreen.style.display = "block";
 
   // Only show question when currentQuestion is triggered
   db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
