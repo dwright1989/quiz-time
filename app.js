@@ -105,9 +105,6 @@ function showQuestion(index) {
     return;
   }
 
-  // Show timer UI
-  document.getElementById("timer-container").style.display = "block";
-
   let html = `<h2>${q.q}</h2>`;
 
   // Only show answer buttons if NOT host
@@ -116,6 +113,10 @@ function showQuestion(index) {
   }
 
   questionArea.innerHTML = html;
+
+  // Show timer UI
+  document.getElementById("timer-container").style.display = "block";
+
 
   let timeLeft = 10;
   const timeDisplay = document.getElementById("time-left");
