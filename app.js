@@ -101,22 +101,21 @@ function joinGame() {
 function showQuestion(index) {
   const q = questions[index];
   if (!q) {
-    questionArea.innerHTML = "<h2>Game Over!</h2>";
+    document.getElementById("host-question-area").innerHTML = "<h2>Game Over!</h2>";
+    document.getElementById("player-question-area").innerHTML = "<h2>Game Over!</h2>";
     return;
   }
 
+  // Host: just show the question
+  document.getElementById("host-question-area").innerHTML = `<h2>${q.q}</h2>`;
+
+  // Player: show question + answer buttons
   let html = `<h2>${q.q}</h2>`;
+  html += q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
+  document.getElementById("player-question-area").innerHTML = html;
 
-  // Only show answer buttons if NOT host
-  if (!isHost) {
-    html += q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
-  }
-
-  questionArea.innerHTML = html;
-
-  // Show timer UI
+  // Show timer UI for both (optional – you could split this too)
   document.getElementById("timer-container").style.display = "block";
-
 
   let timeLeft = 10;
   const timeDisplay = document.getElementById("time-left");
@@ -135,6 +134,7 @@ function showQuestion(index) {
     }
   }, 1000);
 }
+
 
 function answerQuestion(index) {
   console.log("Answered question", index);
