@@ -34,6 +34,14 @@ function generateGameCode() {
 
 function startGame() {
   db.ref(`games/${gameCode}/currentQuestion`).set(0);
+   timer = setInterval(() => {
+        index++;
+        if (index < questions.length) {
+          db.ref(`games/${gameCode}/currentQuestion`).set(index);
+        } else {
+          clearInterval(timer);
+        }
+      }, 10000); // 10 seconds
 }
 
 function newGame() {
