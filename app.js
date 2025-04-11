@@ -33,6 +33,7 @@ function generateGameCode() {
 }
 
 function startGame() {
+  let index = 0;
   db.ref(`games/${gameCode}/currentQuestion`).set(0);
    timer = setInterval(() => {
         index++;
