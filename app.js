@@ -257,15 +257,14 @@ function updateLiveScores() {
   });
 }
 
-
-// Auto-join via ?join=CODE
 window.addEventListener("load", () => {
   const params = new URLSearchParams(window.location.search);
   const code = params.get("join");
   if (code && codeInput) {
     hostScreen.classList.remove("active");
+    playerScreen.classList.remove("active"); // Don't jump ahead
     joinArea.classList.add("active");
-    playerScreen.classList.add("active");
     codeInput.value = code;
   }
 });
+
