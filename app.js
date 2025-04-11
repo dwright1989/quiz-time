@@ -186,6 +186,16 @@ function showQuestion(index) {
 
 
 function answerQuestion(index, selectedAnswer) {
+  // Highlight the selected button
+  const buttons = document.querySelectorAll("#player-question-area button");
+  buttons.forEach(btn => {
+    if (btn.textContent === selectedAnswer) {
+      btn.classList.add("selected");
+    } else {
+      btn.classList.remove("selected");
+  }
+  });
+
   // Disable all buttons after answering
   const buttons = document.querySelectorAll("#player-question-area button");
   buttons.forEach(btn => btn.disabled = true);
