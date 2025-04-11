@@ -187,18 +187,15 @@ function showQuestion(index) {
 
 function answerQuestion(index, selectedAnswer) {
   // Highlight the selected button
-  let buttons = document.querySelectorAll("#player-question-area button");
+  const buttons = document.querySelectorAll("#player-question-area button");
   buttons.forEach(btn => {
     if (btn.textContent === selectedAnswer) {
       btn.classList.add("selected");
     } else {
       btn.classList.remove("selected");
-  }
+    }
+    btn.disabled = true; // Disable all buttons after answering
   });
-
-  // Disable all buttons after answering
-  const buttons = document.querySelectorAll("#player-question-area button");
-  buttons.forEach(btn => btn.disabled = true);
 
   const correctAnswer = questions[index].a[1];
   const playersRef = db.ref(`games/${gameCode}/players`);
@@ -210,10 +207,8 @@ function answerQuestion(index, selectedAnswer) {
     if (playerKey) {
       const player = players[playerKey];
 
-      // Check if already answered this question
       if (player.answered && player.answered.includes(index)) return;
 
-      // Update answered questions
       const updatedAnswered = player.answered || [];
       updatedAnswered.push(index);
 
@@ -227,6 +222,7 @@ function answerQuestion(index, selectedAnswer) {
     }
   });
 }
+
 
 function showScores() {
   setTimeout(() => {
