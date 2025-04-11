@@ -77,7 +77,11 @@ function newGame() {
     if (index !== null) {
       showQuestion(index);
     } else {
-      // Game is over, show final scores on host
+      // Game is over, show final scores on host and hide timer and question
+      document.getElementById("host-question-area").style.display = "none";
+      document.getElementById("player-question-area").style.display = "none";
+      document.getElementById("timer-container").style.display = "none";
+      document.getElementById("host-timer-container").style.display = "none";
       showScores();
     }
   });
