@@ -58,6 +58,7 @@ function startGame() {
 
 
 function newGame() {
+  gameStarted = false;
   isHost = true;
   gameCode = generateGameCode();
   const joinUrl = "https://dwright1989.github.io/quiz-time/index.html?join=" + gameCode;
@@ -84,7 +85,7 @@ function newGame() {
     const index = snapshot.val();
     if (index !== null) {
       showQuestion(index);
-    } else {
+    } else if (gameStarted) {
       // Game is over, show final scores on host and hide timer and question
       document.getElementById("host-question-area").style.display = "none";
       document.getElementById("player-question-area").style.display = "none";
@@ -123,20 +124,20 @@ function joinGame() {
 
 function showQuestion(index) {
   const q = questions[index];
+ 
   if (!q) {
     // Hide question UI
     document.getElementById("host-question-area").style.display = "none";
     document.getElementById("player-question-area").style.display = "none";
     document.getElementById("timer-container").style.display = "none";
     document.getElementById("host-timer-container").style.display = "none";
-  
     // Show leaderboard
     showScores();
     return;
   }
-
-
-
+  document.getElementById("host-question-area").style.display = "block";
+  document.getElementById("player-question-area").style.display = "block";
+  
   // Host: just show the question
   document.getElementById("host-question-area").innerHTML = `<h2>${q.q}</h2>`;
   hostStartScreen.style.display = "none";
