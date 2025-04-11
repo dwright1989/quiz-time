@@ -37,14 +37,17 @@
 </head>
 <body>
   <div id="host-screen" class="screen active">
-    <h1>Host Quiz Game</h1>
-    <button onclick="newGame()">New Game</button>
-    <div id="game-code"></div>
-    <canvas id="qr-code"></canvas>
-    <div id="start-game-container" style="display: none;">
-      <button onclick="startGame()">Start Game</button>
-    </div>
-    <div id="player-list"></div>
+    <div id="host-start-screen" class="screen active">
+      <h1>Host Quiz Game</h1>
+      <button onclick="newGame()">New Game</button>
+      <div id="game-code"></div>
+      <canvas id="qr-code"></canvas>
+      <div id="start-game-container" style="display: none;">
+        <button onclick="startGame()">Start Game</button>
+      </div>
+      <div id="player-list"></div>
+    </div>  
+    <div id="host-question-area"></div>
   </div>
 
   <div id="player-screen" class="screen">
@@ -61,8 +64,7 @@
       <input type="text" id="player-name" placeholder="Your name" />
       <button onclick="joinGame()">Join</button>
     </div>  
-    <div id="question-area"></div>
-
+     <div id="player-question-area"></div>
     <div id="waiting-for-host" style="display: none;"><h3>Waiting for host to start the game</h3></div>
   </div>
 

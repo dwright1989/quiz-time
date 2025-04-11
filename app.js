@@ -15,6 +15,7 @@ let isHost = false;
 const db = firebase.database();
 
 const hostScreen = document.getElementById("host-screen");
+const hostStartScreen = document.getElementById("host-start-screen");
 const playerScreen = document.getElementById("player-screen");
 const joinArea = document.getElementById("join-container");
 const codeInput = document.getElementById("code-input");
@@ -67,6 +68,12 @@ function newGame() {
       document.getElementById("start-game-container").style.display = "block";
     }
   });
+
+  // Listen for question updates on the host screen too
+  db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
+    const index = snapshot.val();
+    if (index !== null) showQuestion(index);
+  });
 }
 
 function joinGame() {
@@ -95,13 +102,21 @@ function joinGame() {
 function showQuestion(index) {
   const q = questions[index];
   if (!q) {
-    questionArea.innerHTML = "<h2>Game Over!</h2>";
+    document.getElementById("host-question-area").innerHTML = "<h2>Game Over!</h2>";
+    document.getElementById("player-question-area").innerHTML = "<h2>Game Over!</h2>";
     return;
   }
-  questionArea.innerHTML = `<h2>${q.q}</h2>` +
-    q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
 
-  // Show timer UI
+  // Host: just show the question
+  document.getElementById("host-question-area").innerHTML = `<h2>${q.q}</h2>`;
+  hostStartScreen.style.display = "none";
+
+  // Player: show question + answer buttons
+  let html = `<h2>${q.q}</h2>`;
+  html += q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
+  document.getElementById("player-question-area").innerHTML = html;
+
+  // Show timer UI for both (optional – you could split this too)
   document.getElementById("timer-container").style.display = "block";
 
   let timeLeft = 10;
@@ -121,6 +136,7 @@ function showQuestion(index) {
     }
   }, 1000);
 }
+
 
 function answerQuestion(index) {
   console.log("Answered question", index);
