@@ -122,7 +122,7 @@ function showQuestion(index) {
 
   let timeLeft = 10;
   const timeDisplay = document.getElementById("time-left");
-  const fill = document.getElementById("progress-fill");
+  const fill = document.getElementById("player-progress-fill");
   const hostTimeDisplay = document.getElementById("host-time-left");
   const hostFill = document.getElementById("host-progress-fill");
 
