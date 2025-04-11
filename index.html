@@ -35,4 +35,90 @@
     #scoreboard {
       margin-top: 30px;
       padding: 20px;
-      background: #
+      background: #f0f0f0;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    #score-list p {
+      font-size: 1.2em;
+      margin: 5px 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 100%;
+      background-color: #4caf50;
+      transition: width 1s linear;
+    }
+
+    button.selected {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+      border: 2px solid #388e3c;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+</head>
+<body>
+
+  <!-- Join screen (shown when ?join= is in URL) -->
+  <div id="join-container" class="screen">
+    <h1>Join Quiz</h1>
+    <input type="text" id="code-input" placeholder="Enter game code" />
+    <input type="text" id="player-name" placeholder="Your name" />
+    <button onclick="joinGame()">Join</button>
+  </div>
+
+  <!-- Host screen -->
+  <div id="host-screen" class="screen active">
+    <div id="host-start-screen" class="screen active">
+      <h1>Host Quiz Game</h1>
+      <button onclick="newGame()">New Game</button>
+      <div id="game-code"></div>
+      <canvas id="qr-code"></canvas>
+      <div id="start-game-container" style="display: none;">
+        <button onclick="startGame()">Start Game</button>
+      </div>
+      <div id="player-list"></div>
+    </div>  
+    <div id="host-timer-container" style="display: none;">
+      <div id="host-time-left">10</div>
+      <div class="progress-bar">
+        <div id="host-progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+    <div id="host-question-area"></div>
+    <div id="scoreboard" style="display: none;">
+      <h2>Final Scores</h2>
+      <div id="score-list"></div>
+    </div>
+    <div id="host-live-scores" style="margin-top: 20px;"></div>
+  </div>
+
+  <!-- Player screen (after joining) -->
+  <div id="player-screen" class="screen">
+    <div id="timer-container" style="display:none;">
+      <div id="timer-text">Time left: <span id="time-left">10</span> seconds</div>
+      <div id="player-progress-bar" class="progress-bar">
+        <div id="player-progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+    <div id="player-question-area"></div>
+    <div id="waiting-for-host" style="display: none;"><h3>Waiting for host to start the game</h3></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
