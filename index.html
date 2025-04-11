@@ -15,7 +15,7 @@
   max-width: 400px;
 }
 
-#progress-bar {
+.progress-bar {
   width: 100%;
   height: 20px;
   background-color: #ddd;
@@ -23,7 +23,7 @@
   overflow: hidden;
 }
 
-#progress-fill {
+.progress-fill {
   height: 100%;
   width: 100%;
   background-color: #4caf50;
@@ -47,14 +47,20 @@
       </div>
       <div id="player-list"></div>
     </div>  
+    <div id="host-timer-container" style="display: none;">
+      <div id="host-time-left">10</div>
+      <div class="progress-bar">
+        <div id="host-progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
     <div id="host-question-area"></div>
   </div>
 
   <div id="player-screen" class="screen">
     <div id="timer-container" style="display:none;">
       <div id="timer-text">Time left: <span id="time-left">10</span> seconds</div>
-      <div id="progress-bar">
-        <div id="progress-fill"></div>
+      <div id="player-progress-bar" class="progress-bar">
+        <div id="player-progress-fill" class="progress-fill"></div>
       </div>
     </div>
 

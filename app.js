@@ -116,21 +116,27 @@ function showQuestion(index) {
   html += q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
   document.getElementById("player-question-area").innerHTML = html;
 
-  // Show timer UI for both (optional – you could split this too)
+  // Show timer UI for host and player
   document.getElementById("timer-container").style.display = "block";
+  document.getElementById("host-timer-container").style.display = "block";
 
   let timeLeft = 10;
   const timeDisplay = document.getElementById("time-left");
-  const fill = document.getElementById("progress-fill");
+  const fill = document.getElementById("player-progress-fill");
+  const hostTimeDisplay = document.getElementById("host-time-left");
+  const hostFill = document.getElementById("host-progress-fill");
 
   timeDisplay.textContent = timeLeft;
   fill.style.width = "100%";
+  hostTimeDisplay.textContent = timeLeft;
+  hostFill.style.width = "100%";
 
   const countdown = setInterval(() => {
     timeLeft--;
     timeDisplay.textContent = timeLeft;
     fill.style.width = (timeLeft * 10) + "%";
-
+    hostTimeDisplay.textContent = timeLeft;
+    hostFill.style.width = (timeLeft * 10) + "%";
     if (timeLeft <= 0) {
       clearInterval(countdown);
     }
