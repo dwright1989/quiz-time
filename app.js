@@ -151,7 +151,7 @@ function showQuestion(index) {
   document.getElementById("player-question-area").innerHTML = html;
   
   // ✅ Re-enable buttons (in case they were disabled from a previous question)
-  const buttons = document.querySelectorAll("#player-question-area button");
+  let buttons = document.querySelectorAll("#player-question-area button");
   buttons.forEach(btn => btn.disabled = false);
 
 
@@ -187,7 +187,7 @@ function showQuestion(index) {
 
 function answerQuestion(index, selectedAnswer) {
   // Highlight the selected button
-  const buttons = document.querySelectorAll("#player-question-area button");
+  let buttons = document.querySelectorAll("#player-question-area button");
   buttons.forEach(btn => {
     if (btn.textContent === selectedAnswer) {
       btn.classList.add("selected");
