@@ -67,6 +67,12 @@ function newGame() {
       document.getElementById("start-game-container").style.display = "block";
     }
   });
+
+  // Listen for question updates on the host screen too
+  db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
+    const index = snapshot.val();
+    if (index !== null) showQuestion(index);
+  });
 }
 
 function joinGame() {
@@ -103,6 +109,11 @@ function showQuestion(index) {
 
   // Show timer UI
   document.getElementById("timer-container").style.display = "block";
+
+  // Only show answer buttons if NOT host
+  if (!isHost) {
+    html += q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
+  }
 
   let timeLeft = 10;
   const timeDisplay = document.getElementById("time-left");
