@@ -21,7 +21,6 @@ const codeInput = document.getElementById("code-input");
 const playerNameInput = document.getElementById("player-name");
 const questionArea = document.getElementById("question-area");
 const playerList = document.getElementById("player-list");
-document.getElementById("start-game").style.display = "none";
 
 let gameCode = "";
 const questions = [
