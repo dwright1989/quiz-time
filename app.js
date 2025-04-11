@@ -62,6 +62,10 @@ function newGame() {
     const players = snapshot.val() || {};
     playerList.innerHTML = `<h3>Players Joined:</h3>` +
       Object.values(players).map(name => `<p>${name}</p>`).join('');
+    // Show Start Game button only if at least one player is present
+    if (Object.keys(players).length > 0) {
+      document.getElementById("start-game-container").style.display = "block";
+    }
   });
 }
 
