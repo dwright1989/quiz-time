@@ -180,6 +180,7 @@ function showQuestion(index) {
     hostFill.style.width = (timeLeft * 10) + "%";
     if (timeLeft <= 0) {
       clearInterval(countdown);
+      updateLiveScores(); // 🔥 This updates the host's live scoreboard
     }
   }, 1000);
 }
@@ -242,6 +243,19 @@ function showScores() {
 }
 
 
+function updateLiveScores() {
+  db.ref(`games/${gameCode}/players`).once('value', snapshot => {
+    const players = snapshot.val() || {};
+
+    const sortedPlayers = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
+
+    const html = sortedPlayers.map((p, i) =>
+      `<p><strong>#${i + 1} ${p.name}</strong>: ${p.score || 0} point${p.score === 1 ? '' : 's'}</p>`
+    ).join('');
+
+    document.getElementById("host-live-scores").innerHTML = html;
+  });
+}
 
 
 // Auto-join via ?join=CODE
