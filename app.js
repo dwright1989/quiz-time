@@ -91,6 +91,26 @@ function showQuestion(index) {
   }
   questionArea.innerHTML = `<h2>${q.q}</h2>` +
     q.a.map(ans => `<button onclick='answerQuestion(${index})'>${ans}</button>`).join("<br>");
+
+  // Show timer UI
+  document.getElementById("timer-container").style.display = "block";
+
+  let timeLeft = 10;
+  const timeDisplay = document.getElementById("time-left");
+  const fill = document.getElementById("progress-fill");
+
+  timeDisplay.textContent = timeLeft;
+  fill.style.width = "100%";
+
+  const countdown = setInterval(() => {
+    timeLeft--;
+    timeDisplay.textContent = timeLeft;
+    fill.style.width = (timeLeft * 10) + "%";
+
+    if (timeLeft <= 0) {
+      clearInterval(countdown);
+    }
+  }, 1000);
 }
 
 function answerQuestion(index) {
