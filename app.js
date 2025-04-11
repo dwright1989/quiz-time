@@ -81,7 +81,10 @@ function joinGame() {
   const name = playerNameInput.value.trim();
   if (!name) return alert("Please enter your name");
 
-  db.ref(`games/${code}/players`).push(name);
+  db.ref(`games/${code}/players`).push({
+    name: name,
+    score: 0
+  });
   joinArea.style.display = "none";
 
   gameCode = code;
@@ -104,8 +107,12 @@ function showQuestion(index) {
   if (!q) {
     document.getElementById("host-question-area").innerHTML = "<h2>Game Over!</h2>";
     document.getElementById("player-question-area").innerHTML = "<h2>Game Over!</h2>";
+  
+    // Show leaderboard
+    showScores();
     return;
   }
+
 
   // Host: just show the question
   document.getElementById("host-question-area").innerHTML = `<h2>${q.q}</h2>`;
@@ -144,9 +151,43 @@ function showQuestion(index) {
 }
 
 
-function answerQuestion(index) {
+function answerQuestion(index, selectedAnswer) {
+  const correctAnswer = questions[index].a[1]; // assuming index 1 is always the correct answer
+
+  if (selectedAnswer === correctAnswer) {
+    const playersRef = db.ref(`games/${gameCode}/players`);
+    playersRef.once('value', snapshot => {
+      const players = snapshot.val();
+      const playerKey = Object.keys(players).find(key => players[key].name === playerNameInput.value);
+
+      if (playerKey) {
+        const currentScore = players[playerKey].score || 0;
+        playersRef.child(playerKey).update({ score: currentScore + 1 });
+      }
+    });
+  }
+
   console.log("Answered question", index);
 }
+
+function showScores() {
+  db.ref(`games/${gameCode}/players`).once('value', snapshot => {
+    const players = snapshot.val() || {};
+
+    // Sort players by score
+    const sortedPlayers = Object.values(players).sort((a, b) => (b.score || 0) - (a.score || 0));
+
+    // Build HTML
+    const html = sortedPlayers.map((p, i) => 
+      `<p><strong>#${i + 1} ${p.name}</strong>: ${p.score || 0} point${p.score === 1 ? '' : 's'}</p>`
+    ).join('');
+
+    document.getElementById("score-list").innerHTML = html;
+    document.getElementById("scoreboard").style.display = "block";
+  });
+}
+
+
 
 // Auto-join via ?join=CODE
 window.addEventListener("load", () => {
