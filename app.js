@@ -12,6 +12,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 let isHost = false;
+let gameStarted = false;
 const db = firebase.database();
 
 const hostScreen = document.getElementById("host-screen");
@@ -35,6 +36,7 @@ function generateGameCode() {
 }
 
 function startGame() {
+  gameStarted = true;
   document.getElementById("scoreboard").style.display = "none";
   let index = 0;
   db.ref(`games/${gameCode}/currentQuestion`).set(index);
