@@ -35,7 +35,6 @@ function generateGameCode() {
 
 function startGame() {
   let index = 0;
-  waitingScreen.style.display = "none";
   db.ref(`games/${gameCode}/currentQuestion`).set(0);
    timer = setInterval(() => {
         index++;
@@ -86,7 +85,10 @@ function joinGame() {
   // Only show question when currentQuestion is triggered
   db.ref(`games/${gameCode}/currentQuestion`).on('value', snapshot => {
     const index = snapshot.val();
-    if (index !== null) showQuestion(index);
+    if (index !== null){
+      waitingScreen.style.display = "none"; // Hides waiting screen for players
+      showQuestion(index);
+    }
   });
 }
 
