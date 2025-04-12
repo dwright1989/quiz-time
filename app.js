@@ -136,8 +136,13 @@ function showQuestion(index) {
     showScores();
     return;
   }
-  document.getElementById("host-question-area").style.display = "block";
-  document.getElementById("player-question-area").style.display = "block";
+  // Clear previous answer summary
+document.getElementById("answer-summary").innerHTML = "";
+document.getElementById("answer-summary").style.display = "none";
+
+document.getElementById("host-question-area").style.display = "block";
+document.getElementById("player-question-area").style.display = "block";
+
   
   // Host: show question and answers 
   let hostHtml = `<h2>${q.q}</h2>`;
@@ -218,7 +223,7 @@ function showAnswerSummary(index) {
     // Hide after 2s
     setTimeout(() => {
       answerSummary.style.display = "none";
-    }, 2000);
+    }, 12000);
   });
 }
 
@@ -237,25 +242,27 @@ function selectAnswer(button, index, selectedAnswer) {
 
 
 function answerQuestion(index, selectedAnswer) {
-  const correctAnswer = questions[index].a[1]; // assuming index 1 is always the correct answer
+  const correctAnswer = questions[index].a[1];
   const playersRef = db.ref(`games/${gameCode}/players`);
-  if (selectedAnswer === correctAnswer) {
-    const playersRef = db.ref(`games/${gameCode}/players`);
-    playersRef.once('value', snapshot => {
-      const players = snapshot.val();
-      const playerKey = Object.keys(players).find(key => players[key].name === playerNameInput.value);
+  playersRef.once('value', snapshot => {
+    const players = snapshot.val();
+    const playerKey = Object.keys(players).find(key => players[key].name === playerNameInput.value);
 
-      if (playerKey) {
-        const currentScore = players[playerKey].score || 0;
-        const isCorrect = selectedAnswer === correctAnswer;
-        
-       playersRef.child(playerKey).update({
+    if (playerKey) {
+      const currentScore = players[playerKey].score || 0;
+      const isCorrect = selectedAnswer === correctAnswer;
+
+      // ✅ Always update lastAnswer, even if incorrect
+      playersRef.child(playerKey).update({
         score: isCorrect ? currentScore + 1 : currentScore,
-        lastAnswer: selectedAnswer // ✅ Save the selected answer
+        lastAnswer: selectedAnswer
       });
-      }
-    });
-  }
+    }
+  });
+
+  console.log("Answered question", index);
+}
+
 
   console.log("Answered question", index);
 }
