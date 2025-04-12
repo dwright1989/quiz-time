@@ -138,8 +138,11 @@ function showQuestion(index) {
   document.getElementById("host-question-area").style.display = "block";
   document.getElementById("player-question-area").style.display = "block";
   
-  // Host: just show the question
-  document.getElementById("host-question-area").innerHTML = `<h2>${q.q}</h2>`;
+  // Host: show question and answers 
+  let hostHtml = `<h2>${q.q}</h2>`;
+  hostHtml += q.a.map(ans => `<button class="answer-btn" disabled>${ans}</button>`).join("<br>");
+  document.getElementById("host-question-area").innerHTML = hostHtml;
+
   hostStartScreen.style.display = "none";
 
   // Player: show question + answer buttons
