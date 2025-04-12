@@ -184,6 +184,8 @@ function showQuestion(index) {
           btn.classList.add("correct");
         }
       });
+
+      showAnswerSummary(index);
     
       // Player: highlight
       document.querySelectorAll("#player-question-area .answer-btn").forEach(btn => {
@@ -195,6 +197,31 @@ function showQuestion(index) {
 
   }, 1000);
 }
+
+function showAnswerSummary(index) {
+  const answerSummary = document.getElementById("answer-summary");
+  answerSummary.innerHTML = "<h3>Answers:</h3>";
+  answerSummary.style.display = "block";
+
+  db.ref(`games/${gameCode}/players`).once("value", snapshot => {
+    const players = snapshot.val() || {};
+    const correctAnswer = questions[index].a[1];
+
+    const list = Object.values(players).map(player => {
+      const answer = player.lastAnswer || "No answer";
+      const isCorrect = answer === correctAnswer;
+      return `<p>${player.name}: <span class="${isCorrect ? 'correct' : 'wrong'}">${answer}</span></p>`;
+    }).join('');
+
+    answerSummary.innerHTML += list;
+
+    // Hide after 2s
+    setTimeout(() => {
+      answerSummary.style.display = "none";
+    }, 2000);
+  });
+}
+
 
 function selectAnswer(button, index, selectedAnswer) {
   // Remove highlight from any previously selected button
@@ -211,7 +238,7 @@ function selectAnswer(button, index, selectedAnswer) {
 
 function answerQuestion(index, selectedAnswer) {
   const correctAnswer = questions[index].a[1]; // assuming index 1 is always the correct answer
-
+  const playersRef = db.ref(`games/${gameCode}/players`);
   if (selectedAnswer === correctAnswer) {
     const playersRef = db.ref(`games/${gameCode}/players`);
     playersRef.once('value', snapshot => {
@@ -220,7 +247,12 @@ function answerQuestion(index, selectedAnswer) {
 
       if (playerKey) {
         const currentScore = players[playerKey].score || 0;
-        playersRef.child(playerKey).update({ score: currentScore + 1 });
+        const isCorrect = selectedAnswer === correctAnswer;
+        
+       playersRef.child(playerKey).update({
+        score: isCorrect ? currentScore + 1 : currentScore,
+        lastAnswer: selectedAnswer // ✅ Save the selected answer
+      });
       }
     });
   }
