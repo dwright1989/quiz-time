@@ -144,7 +144,7 @@ function showQuestion(index) {
 
   // Player: show question + answer buttons
   let html = `<h2>${q.q}</h2>`;
-  html += q.a.map(ans => `<button onclick='answerQuestion(${index}, "${ans}")'>${ans}</button>`).join("<br>");
+  html += q.a.map(ans => `<button class="answer-btn" onclick='selectAnswer(this, ${index}, "${ans}")'>${ans}</button>`).join("<br>");
   document.getElementById("player-question-area").innerHTML = html;
 
   // Show timer UI for host and player
@@ -170,8 +170,30 @@ function showQuestion(index) {
     hostFill.style.width = (timeLeft * 10) + "%";
     if (timeLeft <= 0) {
       clearInterval(countdown);
+
+      // Highlight correct answer on host screen
+      const correctAnswer = questions[index].a[1]; // assuming index 1 is always correct
+      const hostButtons = document.querySelectorAll("#host-question-area button");
+      hostButtons.forEach(btn => {
+        if (btn.textContent === correctAnswer) {
+          btn.classList.add("correct");
+        }
+      });
+
     }
   }, 1000);
+}
+
+function selectAnswer(button, index, selectedAnswer) {
+  // Remove highlight from any previously selected button
+  const buttons = document.querySelectorAll("#player-question-area .answer-btn");
+  buttons.forEach(btn => btn.classList.remove("selected"));
+
+  // Highlight the clicked one
+  button.classList.add("selected");
+
+  // Send answer to database
+  answerQuestion(index, selectedAnswer);
 }
 
 
