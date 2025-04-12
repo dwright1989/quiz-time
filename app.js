@@ -39,21 +39,22 @@ function startGame() {
   gameStarted = true;
   document.getElementById("scoreboard").style.display = "none";
   let index = 0;
-  db.ref(`games/${gameCode}/currentQuestion`).set(index);
-
-  timer = setInterval(() => {
-    index++;
+  function nextQuestion() {
     if (index < questions.length) {
       db.ref(`games/${gameCode}/currentQuestion`).set(index);
-    } else {
-      clearInterval(timer);
 
-      // Delay ending the game by 10 seconds to match the last question's timer
+      // Wait 10s for answering + 2s for showing correct answer
       setTimeout(() => {
-        db.ref(`games/${gameCode}/currentQuestion`).set(null); // Trigger end of game
-      }, 10000);
+        index++;
+        nextQuestion();
+      }, 12000); // 10s answer + 2s pause to show correct answer
+    } else {
+      // Game over
+      db.ref(`games/${gameCode}/currentQuestion`).set(null);
     }
-  }, 10000);
+  }
+
+  nextQuestion();
 }
 
 
@@ -138,8 +139,11 @@ function showQuestion(index) {
   document.getElementById("host-question-area").style.display = "block";
   document.getElementById("player-question-area").style.display = "block";
   
-  // Host: just show the question
-  document.getElementById("host-question-area").innerHTML = `<h2>${q.q}</h2>`;
+  // Host: show question and answers 
+  let hostHtml = `<h2>${q.q}</h2>`;
+  hostHtml += q.a.map(ans => `<button class="answer-btn" disabled>${ans}</button>`).join("<br>");
+  document.getElementById("host-question-area").innerHTML = hostHtml;
+
   hostStartScreen.style.display = "none";
 
   // Player: show question + answer buttons
@@ -170,17 +174,25 @@ function showQuestion(index) {
     hostFill.style.width = (timeLeft * 10) + "%";
     if (timeLeft <= 0) {
       clearInterval(countdown);
-
-      // Highlight correct answer on host screen
-      const correctAnswer = questions[index].a[1]; // assuming index 1 is always correct
-      const hostButtons = document.querySelectorAll("#host-question-area button");
-      hostButtons.forEach(btn => {
-        if (btn.textContent === correctAnswer) {
+    
+      const correctAnswer = questions[index].a[1]; // adjust if this assumption changes
+      console.log("Correct answer is:", correctAnswer);
+    
+      // Host: highlight
+      document.querySelectorAll("#host-question-area button").forEach(btn => {
+        if (btn.textContent.trim() === correctAnswer) {
           btn.classList.add("correct");
         }
       });
-
+    
+      // Player: highlight
+      document.querySelectorAll("#player-question-area .answer-btn").forEach(btn => {
+        if (btn.textContent.trim() === correctAnswer) {
+          btn.classList.add("correct");
+        }
+      });
     }
+
   }, 1000);
 }
 
