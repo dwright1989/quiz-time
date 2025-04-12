@@ -60,6 +60,19 @@
   pointer-events: none;
 }
 
+    #answer-summary p {
+  margin: 4px 0;
+}
+.correct {
+  color: green;
+  font-weight: bold;
+}
+.wrong {
+  color: red;
+  font-weight: bold;
+}
+
+
 
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
@@ -85,12 +98,14 @@
       </div>
     </div>
     <div id="host-question-area"></div>
-        <div id="scoreboard" style="display: none;">
+    <div id="answer-summary" style="display:none;"></div>
+    <div id="scoreboard" style="display: none;">
       <h2>Final Scores</h2>
       <div id="score-list"></div>
     </div>
 
   </div>
+
 
   <div id="player-screen" class="screen">
     <div id="timer-container" style="display:none;">
