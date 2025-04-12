@@ -39,21 +39,22 @@ function startGame() {
   gameStarted = true;
   document.getElementById("scoreboard").style.display = "none";
   let index = 0;
-  db.ref(`games/${gameCode}/currentQuestion`).set(index);
-
-  timer = setInterval(() => {
-    index++;
+  function nextQuestion() {
     if (index < questions.length) {
       db.ref(`games/${gameCode}/currentQuestion`).set(index);
-    } else {
-      clearInterval(timer);
 
-      // Delay ending the game by 10 seconds to match the last question's timer
+      // Wait 10s for answering + 2s for showing correct answer
       setTimeout(() => {
-        db.ref(`games/${gameCode}/currentQuestion`).set(null); // Trigger end of game
-      }, 10000);
+        index++;
+        nextQuestion();
+      }, 12000); // 10s answer + 2s pause to show correct answer
+    } else {
+      // Game over
+      db.ref(`games/${gameCode}/currentQuestion`).set(null);
     }
-  }, 10000);
+  }
+
+  nextQuestion();
 }
 
 
@@ -182,7 +183,13 @@ function showQuestion(index) {
           btn.classList.add("correct");
         }
       });
-
+      // Highlight correct answer on player screen
+      const playerButtons = document.querySelectorAll("#player-question-area .answer-btn");
+      playerButtons.forEach(btn => {
+        if (btn.textContent === correctAnswer) {
+          btn.classList.add("correct");
+        }
+      });
     }
   }, 1000);
 }
