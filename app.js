@@ -194,6 +194,7 @@ function showQuestion(index) {
       });
     }
   }, 1000);
+}
 
 function selectAnswer(button, index, selectedAnswer) {
   // Remove highlight from any previously selected button
