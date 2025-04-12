@@ -174,25 +174,25 @@ function showQuestion(index) {
     hostFill.style.width = (timeLeft * 10) + "%";
     if (timeLeft <= 0) {
       clearInterval(countdown);
-
-     const correctAnswer = questions[index].a[1]; // still assuming index 1 is correct
-
-      // Highlight correct on host
-      const hostButtons = document.querySelectorAll("#host-question-area button");
-      hostButtons.forEach(btn => {
-        if (btn.textContent === correctAnswer) {
+    
+      const correctAnswer = questions[index].a[1]; // adjust if this assumption changes
+      console.log("Correct answer is:", correctAnswer);
+    
+      // Host: highlight
+      document.querySelectorAll("#host-question-area button").forEach(btn => {
+        if (btn.textContent.trim() === correctAnswer) {
           btn.classList.add("correct");
         }
       });
-
-      // Highlight correct on player
-      const playerButtons = document.querySelectorAll("#player-question-area .answer-btn");
-      playerButtons.forEach(btn => {
-        if (btn.textContent === correctAnswer) {
+    
+      // Player: highlight
+      document.querySelectorAll("#player-question-area .answer-btn").forEach(btn => {
+        if (btn.textContent.trim() === correctAnswer) {
           btn.classList.add("correct");
         }
       });
     }
+
   }, 1000);
 }
 
