@@ -259,11 +259,6 @@ function answerQuestion(index, selectedAnswer) {
       });
     }
   });
-
-  console.log("Answered question", index);
-}
-
-
   console.log("Answered question", index);
 }
 
